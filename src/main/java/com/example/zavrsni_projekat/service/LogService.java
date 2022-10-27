@@ -1,15 +1,14 @@
 package com.example.zavrsni_projekat.service;
 
 import com.example.zavrsni_projekat.model.Log;
-import com.example.zavrsni_projekat.model.ClientType;
-import com.example.zavrsni_projekat.model.LogType;
-import com.example.zavrsni_projekat.repository.ClientRepository;
 import com.example.zavrsni_projekat.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class LogService {
@@ -20,7 +19,14 @@ public class LogService {
         if (log.getCreatedDate() == null) {
             log.setCreatedDate(LocalDateTime.now());
         }
-
         logRepository.save(log);
+    }
+
+    public List<Log> findAll(){
+        var logs = logRepository.findAll();
+//        List<Log> logList = StreamSupport
+//                .stream(logs.spliterator(), false)
+//                .collect(Collectors.toList());
+        return logs;
     }
 }

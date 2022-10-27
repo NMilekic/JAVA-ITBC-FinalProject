@@ -6,11 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 
 @Controller
@@ -29,10 +30,13 @@ public class LogController {
      * @return
      */
     @PostMapping("/api/clients/create")
-    public ResponseEntity<Void> createLog(@RequestBody Log log){
+    public ResponseEntity<?> createLog(@RequestBody Log log){
+        if (log.getLogType().ordinal() < 0 && log.getLogType().ordinal() > 2) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect Log type!");
+        }
         logService.createLog(log);
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        throw new ResponseStatusException(HttpStatus.CREATED, "You are created log successfully!");
     }
 
     /**
@@ -40,10 +44,10 @@ public class LogController {
      * @param
      * @return
      */
-    @RequestMapping("/api/clients/search")
-    public String search(){
-
-        return "radi";
+    @GetMapping("/api/clients/search")
+    public ResponseEntity<List> getAllClientLogs(){
+        var logList = logService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(logList);
     }
 
 }

@@ -4,7 +4,9 @@ import com.example.zavrsni_projekat.model.Client;
 import com.example.zavrsni_projekat.model.Login;
 import com.example.zavrsni_projekat.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,10 +20,10 @@ public class ClientService {
 
     public List<Client> findAll(){
         var clients = clientRepository.findAll();
-        List<Client> clientsList = StreamSupport
-                .stream(clients.spliterator(), false)
-                .collect(Collectors.toList());
-        return clientsList;
+//        List<Client> clientsList = StreamSupport
+//                .stream(clients.spliterator(), false)
+//                .collect(Collectors.toList());
+        return clients;
     }
 
     public void changePassword(Integer id, String password) {
@@ -34,14 +36,25 @@ public class ClientService {
     }
 
     public void registerClient(Client client) {
-        clientRepository.save(client);
+        try {
+            clientRepository.save(client);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username or email already exist!");
+        }
+
     }
 
-    public void login(Login login) {
-//        var client = clientRepository.findByUserName(login.getAccount());
+    public boolean login(Login login) {
         var client = clientRepository.findByUserName(login.getAccount());
-        System.out.println(client.getPassword());
-        System.out.println(login.getPassword());
-        System.out.println(client.getPassword().equals(login.getPassword()));
+        if (client == null) {
+            client = clientRepository.findByEmail(login.getAccount());
+            if (client == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is incorrect!");
+            }
+        }
+        if (!client.getPassword().equals(login.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is incorrect!");
+        }
+        throw new ResponseStatusException(HttpStatus.OK, "You are logged in successfully!");
     }
 }

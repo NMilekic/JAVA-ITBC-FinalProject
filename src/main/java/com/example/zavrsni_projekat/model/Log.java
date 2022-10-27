@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,7 +16,8 @@ public class Log {
     @GenericGenerator(name = "native",strategy = "native")
     @Column(name = "logId")
     private int logId;
+    @Size(max=1024)
     private String message;
-    private int logType;
+    private LogType logType;
     private LocalDateTime createdDate;
 }
