@@ -1,6 +1,6 @@
 package com.example.zavrsni_projekat.filters;
 
-import com.example.zavrsni_projekat.service.MyUserDetailsService;
+import com.example.zavrsni_projekat.service.MyClientDetailsService;
 import com.example.zavrsni_projekat.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +20,7 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
-    private MyUserDetailsService userDetailsService;
+    private MyClientDetailsService userDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;

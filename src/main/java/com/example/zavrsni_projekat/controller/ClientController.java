@@ -2,7 +2,7 @@ package com.example.zavrsni_projekat.controller;
 
 import com.example.zavrsni_projekat.model.*;
 import com.example.zavrsni_projekat.service.ClientService;
-import com.example.zavrsni_projekat.service.MyUserDetailsService;
+import com.example.zavrsni_projekat.service.MyClientDetailsService;
 import com.example.zavrsni_projekat.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class ClientController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private MyUserDetailsService userDetailsService;
+    private MyClientDetailsService userDetailsService;
 
     @Autowired
     private JwtUtil jwtTokenUtil;
@@ -36,27 +36,6 @@ public class ClientController {
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
-
-    @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username of password", e);
-        }
-
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUserName());
-
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
-    }
-
-
-
-
 
     /**
      * Client registration
@@ -71,14 +50,32 @@ public class ClientController {
     }
 
     /**
-     * Client login
-     * @param login
+     * Client login (get jwt token)
+     * @param authenticationRequest
      * @return
+     * @throws Exception
      */
     @PostMapping("/api/clients/login")
-    public void login(@RequestBody Login login){
-        clientService.login(login);
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+//        try {
+//            authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(authenticationRequest.getAccount(), authenticationRequest.getPassword())
+//            );
+//        } catch (BadCredentialsException e) {
+//            throw new Exception("Incorrect username of password", e);
+//        }
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getAccount());
+
+        if (!userDetails.getPassword().equals(authenticationRequest.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is incorrect!");
+        }
+
+        final String jwt = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
+
 
     /**
      * Displaying all Clients from DB
