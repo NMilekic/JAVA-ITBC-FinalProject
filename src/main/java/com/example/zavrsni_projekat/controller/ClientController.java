@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -83,6 +81,7 @@ public class ClientController {
      */
     @GetMapping("/api/clients")
     public ResponseEntity<List> getAllClients(){
+        System.out.println(userDetailsService.getUserId());
         var clientsList = clientService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(clientsList);
     }
@@ -97,6 +96,6 @@ public class ClientController {
     public ResponseEntity<Void> changePassword(@PathVariable Integer clientId, @RequestBody Password password){
         System.out.println(password.getPassword());
         clientService.changePassword(clientId, password.getPassword());
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        throw new ResponseStatusException(HttpStatus.OK, "You have successfully changed the user password of user with id " + clientId + " !");
     }
 }

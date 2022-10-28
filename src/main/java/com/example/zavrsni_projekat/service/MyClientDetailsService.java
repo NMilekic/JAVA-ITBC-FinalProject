@@ -3,6 +3,7 @@ package com.example.zavrsni_projekat.service;
 import com.example.zavrsni_projekat.model.ClientType;
 import com.example.zavrsni_projekat.model.Login;
 import com.example.zavrsni_projekat.repository.ClientRepository;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +22,10 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
+@Data
 public class MyClientDetailsService implements UserDetailsService {
+
+    private int userId;
 
     @Autowired
     private ClientRepository clientRepository;
@@ -36,6 +40,8 @@ public class MyClientDetailsService implements UserDetailsService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is incorrect!");
             }
         }
+
+        this.userId = client.getClientId();
 
         return new User(
                 client.getUserName(),

@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -20,10 +19,11 @@ public class ClientService {
 
     public List<Client> findAll(){
         var clients = clientRepository.findAll();
-//        List<Client> clientsList = StreamSupport
-//                .stream(clients.spliterator(), false)
-//                .collect(Collectors.toList());
         return clients;
+    }
+
+    public Optional<Client> findById(Integer id) {
+        return clientRepository.findById(id);
     }
 
     public void changePassword(Integer id, String password) {
@@ -37,8 +37,12 @@ public class ClientService {
 
     public void registerClient(Client client) {
         try {
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
+            System.out.println(client);
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
             clientRepository.save(client);
         } catch (Exception e){
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username or email already exist!");
         }
 

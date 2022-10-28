@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -16,8 +17,15 @@ public class Log {
     @GenericGenerator(name = "native",strategy = "native")
     @Column(name = "logId")
     private int logId;
-    @Size(max=1024)
     private String message;
     private LogType logType;
     private LocalDateTime createdDate;
+
+//    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+//    @JoinColumn(name = "client_id", referencedColumnName = "client_id", nullable = true)
+//    private Client client;
+
+    @Column(name = "client_id")
+    private int clientId;
+
 }

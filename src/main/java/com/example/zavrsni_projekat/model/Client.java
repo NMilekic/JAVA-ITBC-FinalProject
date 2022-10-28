@@ -14,8 +14,9 @@ import javax.validation.constraints.Size;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
-    @GenericGenerator(name = "native",strategy = "native")
+//    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
+//    @GenericGenerator(name = "native",strategy = "native")
+    @GeneratedValue
     @Column(name = "client_id")
     private int clientId;
     @NotBlank(message = "userName is mandatory")
@@ -27,6 +28,12 @@ public class Client {
     @Email
     private String email;
     private ClientType role;
+
+//    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY,
+//        cascade = CascadeType.PERSIST, targetEntity = Log.class)
+//    private Set<Log> logs;
+
+
 
 
 }
