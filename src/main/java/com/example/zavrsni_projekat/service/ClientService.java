@@ -1,13 +1,16 @@
 package com.example.zavrsni_projekat.service;
 
 import com.example.zavrsni_projekat.model.Client;
+import com.example.zavrsni_projekat.model.ClientView;
 import com.example.zavrsni_projekat.model.Login;
 import com.example.zavrsni_projekat.repository.ClientRepository;
+import com.example.zavrsni_projekat.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +20,25 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
-    public List<Client> findAll(){
+    @Autowired
+    private LogRepository logRepository;
+
+    @Autowired
+    private MyClientDetailsService userDetailsService;
+
+    public List<ClientView> findAll(){
         var clients = clientRepository.findAll();
-        return clients;
+        List<ClientView> clientsView = new ArrayList<>();
+        for (var client : clients) {
+            var logs = logRepository.findAllByClientId(client.getClientId());
+            var logsNum = logs.size();
+            var clientView = new ClientView(
+                    client.getClientId(),
+                    client.getUserName(), client.getEmail(),
+                    logsNum);
+            clientsView.add(clientView);
+        }
+        return clientsView;
     }
 
     public Optional<Client> findById(Integer id) {

@@ -2,7 +2,6 @@ package com.example.zavrsni_projekat.service;
 
 import com.example.zavrsni_projekat.model.Log;
 import com.example.zavrsni_projekat.model.LogRequest;
-import com.example.zavrsni_projekat.model.LogType;
 import com.example.zavrsni_projekat.repository.ClientRepository;
 import com.example.zavrsni_projekat.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,6 @@ import java.util.List;
 public class LogService {
     @Autowired
     private LogRepository logRepository;
-
-    @Autowired
-    private ClientRepository clientRepository;
 
     @Autowired
     private MyClientDetailsService userDetailsService;
