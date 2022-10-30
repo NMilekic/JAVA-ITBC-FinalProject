@@ -1,3 +1,30 @@
+# LOGGER
+
+****
+## Project Description
+Logger is an application for saving client logs by log type. 
+The client must first register. After that the client has to log 
+in to get a jwt token and with that token can access the content 
+of the application. <br />
+
+Have two roles in the application:
+
+- CLIENT
+- ADMIN
+
+When the application starts, two entities will be created in the DB (user
+with role client and administrator with role admin). Details about these
+entities can be found in the file data.sql. <br />
+
+By role, the user can access different parts of the application. Below is
+the API documentation. You can see the client and admin permissions there. <br />
+
+I used H2 database and if you want to see how the app works you don't need
+to connect to any DB because I configured everything. In schema.sql you 
+can see a query for creating tables and in data.sql you can see a query 
+for input data in DB. You just need to download the folder and run the 
+application.
+****
 ## Client
 
 1. Register
