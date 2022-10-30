@@ -14,6 +14,7 @@ import java.util.List;
 @Repository
 public interface LogRepository extends JpaRepository<Log, Integer> {
     public List<Log> findAllByClientId(Integer clientId);
+    public List<Log> findAllByClientIdAndLogType(Integer clientId, LogType logType);
     List<Log> findByCreatedDateBetween(LocalDateTime to, LocalDateTime from);
     public List<Log> findByLogType(LogType logType);
 }

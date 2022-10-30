@@ -1,13 +1,12 @@
 package com.example.zavrsni_projekat.service;
 
-import com.example.zavrsni_projekat.model.Log;
-import com.example.zavrsni_projekat.model.LogRequest;
-import com.example.zavrsni_projekat.repository.ClientRepository;
+import com.example.zavrsni_projekat.model.*;
 import com.example.zavrsni_projekat.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,8 +28,35 @@ public class LogService {
         logRepository.save(log);
     }
 
-    public List<Log> findClientLogs(){
+    public List<LogView> findClientLogs(){
         var logs = logRepository.findAllByClientId(userDetailsService.getUserId());
-        return logs;
+
+        List<LogView> logsView = new ArrayList<>();
+        for (var log : logs) {
+            var logView = new LogView(
+                    log.getMessage(),
+                    log.getLogType(),
+                    log.getCreatedDate()
+            );
+            logsView.add(logView);
+        }
+
+        return logsView;
+    }
+
+    public List<LogView> findClientLogsByType(LogType logType){
+        var logs = logRepository.findAllByClientIdAndLogType(userDetailsService.getUserId(), logType);
+
+        List<LogView> logsView = new ArrayList<>();
+        for (var log : logs) {
+            var logView = new LogView(
+                    log.getMessage(),
+                    log.getLogType(),
+                    log.getCreatedDate()
+            );
+            logsView.add(logView);
+        }
+
+        return logsView;
     }
 }
